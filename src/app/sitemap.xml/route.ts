@@ -58,7 +58,7 @@ export async function GET() {
           },
           {
             image: "How to Be Web3 Fashion",
-            title: "designer.png",
+            title: "howtoweb3fashion1.png",
           },
         ].map(
           (im) =>

@@ -3,22 +3,23 @@
 import { FunctionComponent } from "react";
 import { HeaderProps } from "../types/common.types";
 import Marquee from "./Marquee";
-import Image from "next/image";
 
 const Header: FunctionComponent<HeaderProps> = ({ dict }) => {
   return (
     <div className="relative w-full h-fit flex wheatpaste-texture underground-texture weathered-poster flex-col">
-      <div className="relative torn-edge diagonal-layout wheatpaste-texture w-full h-screen flex crinkled-wheatpaste wheatpaste-fold poster-wrinkles">
-        <Image
-          src={"/images/gdn_table.png"}
-          objectFit="cover"
+      <div className="relative torn-edge diagonal-layout wheatpaste-texture w-full h-[30rem] sm:h-[40rem] lg:h-screen flex crinkled-wheatpaste wheatpaste-fold poster-wrinkles">
+        <video
+          poster={"/images/gdn_table.png"}
           draggable={false}
-          alt="Global Designer Network"
-          layout="fill"
-          className=""
-        />
+          muted
+          autoPlay
+          loop
+          className="object-cover w-full h-full flex"
+        >
+          <source src="/videos/gdn_table.mp4" />
+        </video>
         <div className="absolute top-0 left-0 flex w-full h-fit px-2 py-3 items-center justify-center">
-          <div className="relative w-fit h-fit flex flex-row gap-6 flex-wrap">
+          <div className="relative w-fit h-fit flex flex-row gap-6 flex-wrap items-center justify-center">
             {[
               { titulo: dict?.about, ref: "About" },
               { titulo: dict?.microb, ref: "Microbrands" },
@@ -35,7 +36,7 @@ const Header: FunctionComponent<HeaderProps> = ({ dict }) => {
                       behavior: "smooth",
                     })
                   }
-                  className="relative w-fit text-xl uppercase h-fit flex cursor-pointer font-stencil text-white hover:underline"
+                  className="relative w-fit text-sm sm:text-xl uppercase h-fit flex cursor-pointer font-stencil text-white hover:underline"
                 >
                   {item.titulo}
                 </div>

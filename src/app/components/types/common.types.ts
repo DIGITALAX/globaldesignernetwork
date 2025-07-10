@@ -6,6 +6,10 @@ export type HeaderProps = {
   dict: any;
 };
 
+export type HowProps = {
+  dict: any;
+};
+
 export type RadioProps = {
   dict: any;
 };
@@ -14,6 +18,7 @@ export interface Channel {
   title: string;
   time: string;
   type: string;
+  descripcion: string;
   poster: string;
   video: string;
 }
@@ -41,6 +46,11 @@ export interface Collection {
   unlimited: boolean;
   origin: string;
   blockTimestamp: string;
+  width?: number;
+  height?: number;
+  top?: number;
+  left?: number;
+  right?: number;
   drop: {
     dropId: string;
     metadata: {
@@ -91,3 +101,7 @@ export interface Runway {
 export interface FulfillmentProps {
   dict: any;
 }
+
+export type ColorPickerProps = {
+  onColorSelect?: (color: string) => void;
+};

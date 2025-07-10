@@ -6,38 +6,32 @@ import useVideo from "../hooks/useVideo";
 import Image from "next/image";
 import { FunctionComponent } from "react";
 
-const Radio: FunctionComponent<RadioProps> = () => {
+const Radio: FunctionComponent<RadioProps> = ({ dict }) => {
   const { handlePlay, currentVid, setVidDetails, vidDetails, play } =
     useVideo();
   return (
-    <div className="relative w-full h-fit flex flex-col">
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute top-0 z-0 left-0 w-full h-full object-cover"
-      >
-        <source src="/videos/chica_gdn.mp4" />
-      </video>
-      <div className="relative w-full flex items-center justify-center underground-texture weathered-poster wheatpaste-texture py-4">
-        <div className="relative w-fit h-fit flex">
+    <div className="relative w-full h-fit flex flex-col bg-black gap-10 p-3">
+      <div className="relative font-kare text-white text-[2rem] galaxy:text-[4rem] sm:text-[6rem] mid:text-[8rem] lg:text-[10rem] xl:text-[12rem] flex -left-5 lg:-left-16">
+        {dict?.radio}
+      </div>
+      <div className="relative w-full h-fit flex flex-col md:flex-row justify-between items-start gap-3">
+        <div className="relative w-full text-xl text-left h-fit text-white tracking-widest">
+          <div className="relative w-1/2">{vidDetails?.descripcion}</div>
+        </div>
+        <div className="relative w-full h-[25rem] mid:h-[30rem] flex">
           <video
             ref={currentVid}
-            className="object-cover relative w-96 border-4 border-black h-60 flex"
+            className="object-cover h-full relative w-full border-4 border-black h-60 flex"
+            style={{
+              filter:
+                "saturate(3) hue-rotate(30deg) contrast(1.8) brightness(1.2) sepia(0.3)",
+            }}
             loop
             key={vidDetails?.video}
             poster={vidDetails?.poster}
           >
             <source src={vidDetails?.video} />
           </video>
-            <video
-        autoPlay
-        loop
-        muted
-        className="absolute top-0 z-0 opacity-30 left-0 w-full h-full object-cover"
-      >
-        <source src="/videos/chica_gdn.mp4" />
-      </video>
           <div
             className="absolute bottom-3 right-3 z-2 cursor-pointer w-5 h-5 flex items-center justify-center"
             onClick={() => handlePlay(!play)}
@@ -61,21 +55,21 @@ const Radio: FunctionComponent<RadioProps> = () => {
             <div
               key={index}
               onClick={() => setVidDetails(show)}
-              className={`border border-black text-white font-poster text-black uppercase relative flex w-fit h-fit cursor-pointer hover:opacity-70`}
+              className={`text-white font-cyg text-black uppercase relative flex w-fit h-fit cursor-pointer hover:opacity-70 border border-white`}
             >
               <div className="relative flex flex-col gap-3 w-60 h-40 p-1">
                 <div className="w-full h-fit flex flex-col gap-1">
-                  <div className="w-fit h-fit flex relative text-black text-xl">
+                  <div className="w-fit h-fit flex relative text-base">
                     {show.title}
                   </div>
-                  <div className="w-fit h-fit flex relative text-sm text-black/70">
+                  <div className="w-fit h-fit flex relative text-sm">
                     {show.time}
                   </div>
-                  <div className="w-fit h-fit flex relative text-sm text-black/70">
-                    {show.type}
+                  <div className="w-fit h-fit flex relative text-sm">
+                    [{show.type}]
                   </div>
                 </div>
-                <div className="relative w-full h-full flex">
+                <div className="relative w-full h-full flex border border-white">
                   <Image
                     objectFit="cover"
                     layout="fill"

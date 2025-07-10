@@ -5,50 +5,50 @@ export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const INFURA_GATEWAY_INTERNAL: string =
   "https://globaldesignernetwork.com/api/infura/";
 
-  export const RUNWAY: Runway[] = [
- {
-      src: "/videos/runway4.mp4",
-      poster: "/images/runway4.png",
-      title: "Collection 001",
-      designer: "Artist Name",
-      season: "SS 2024"
-    },
-    {
-      src: "/videos/runway5.mp4", 
-      poster: "/images/runway5.png",
-      title: "Collection 002",
-      designer: "Artist Name",
-      season: "AW 2024"
-    },
-    {
-      src: "/videos/runway6.mp4",
-      poster: "/images/runway6.png", 
-      title: "Collection 003",
-      designer: "Artist Name",
-      season: "SS 2025"
-    },
-    {
-      src: "/videos/runway1.mp4",
-      poster: "/images/runway1.png",
-      title: "Collection 001",
-      designer: "Artist Name",
-      season: "SS 2024"
-    },
-    {
-      src: "/videos/runway2.mp4", 
-      poster: "/images/runway2.png",
-      title: "Collection 002",
-      designer: "Artist Name",
-      season: "AW 2024"
-    },
-    {
-      src: "/videos/runway3.mp4",
-      poster: "/images/runway3.png", 
-      title: "Collection 003",
-      designer: "Artist Name",
-      season: "SS 2025"
-    }
-  ]
+export const RUNWAY: Runway[] = [
+  {
+    src: "/videos/runway4.mp4",
+    poster: "/images/runway4.png",
+    title: "Collection 001",
+    designer: "Artist Name",
+    season: "SS 2024",
+  },
+  {
+    src: "/videos/runway5.mp4",
+    poster: "/images/runway5.png",
+    title: "Collection 002",
+    designer: "Artist Name",
+    season: "AW 2024",
+  },
+  {
+    src: "/videos/runway6.mp4",
+    poster: "/images/runway6.png",
+    title: "Collection 003",
+    designer: "Artist Name",
+    season: "SS 2025",
+  },
+  {
+    src: "/videos/runway1.mp4",
+    poster: "/images/runway1.png",
+    title: "Collection 001",
+    designer: "Artist Name",
+    season: "SS 2024",
+  },
+  {
+    src: "/videos/runway2.mp4",
+    poster: "/images/runway2.png",
+    title: "Collection 002",
+    designer: "Artist Name",
+    season: "AW 2024",
+  },
+  {
+    src: "/videos/runway3.mp4",
+    poster: "/images/runway3.png",
+    title: "Collection 003",
+    designer: "Artist Name",
+    season: "SS 2025",
+  },
+];
 
 export const MICROBRANDS: Microbrand[] = [
   {
@@ -137,30 +137,36 @@ export const RADIO: Channel[] = [
   {
     title: "Desde el Telar Jacquard",
     time: "00:00 - 11:48",
-    type: "Español",
+    type: "ES",
     poster: "/images/telar.png",
     video: "/videos/telar.mp4",
+    descripcion:
+      "¿Qué saben los agentes sobre la moda en web3? Temporada 3, Episodio 2, La Radio Pirata del Dial.",
   },
   {
     title: "Los Tres Grandes",
     time: "00:00 - 10:06",
-    type: "Español",
+    type: "ES",
     poster: "/images/tres.png",
     video: "/videos/tres.mp4",
+    descripcion:
+      "Temporada 3, Episodio 3, La Radio Pirata del Dial. BlackRock, State Street, Vanguard — pequeños trozos de todo 🌏",
   },
   {
     title: "BlackRockification",
     time: "00:00 - 12:04",
-    type: "English",
+    type: "EN",
     poster: "/images/black.png",
     video: "/videos/black.mp4",
+    descripcion: "// That's not how you say Budapest 🇭🇺👀 //",
   },
   {
     title: "For Indie Designers",
     time: "00:00 - 10:31",
-    type: "English",
+    type: "EN",
     poster: "/images/indie.png",
     video: "/videos/indie.mp4",
+    descripcion: "Tune in to this agent's thread: what's fashion about web3?",
   },
   {
     title: "Where do you start?",
@@ -168,6 +174,141 @@ export const RADIO: Channel[] = [
     type: "--",
     poster: "/images/start.png",
     video: "/videos/start.mp4",
+    descripcion: "Generated LoFi beats, while you search.",
   },
 ];
 
+export const WEB3_FASHION: {
+  texto: string;
+  fuente: string;
+  izquierda?: number;
+  y: number;
+  derecha?: number;
+  rotate?: number;
+}[] = [
+  {
+    texto: "go",
+    fuente: "marker",
+    izquierda: 300,
+    y: 200,
+    rotate: 30,
+  },
+  {
+    texto: "pub",
+    fuente: "marker",
+    derecha: 80,
+    y: 1200,
+    rotate: 0,
+  },
+  {
+    texto: "local",
+    fuente: "marker",
+    izquierda: 150,
+    y: 150,
+  },
+  {
+    texto: "encrypt",
+    fuente: "hamzi",
+    derecha: 30,
+    y: 650,
+    rotate: 0,
+  },
+  {
+    texto: "mint",
+    fuente: "hamzi",
+    izquierda: 10,
+    y: 800,
+    rotate: -30,
+  },
+  {
+    texto: "code",
+    fuente: "marker",
+    derecha: 20,
+    y: 450,
+  },
+  {
+    texto: "deploy",
+    fuente: "hamzi",
+    izquierda: 200,
+    y: 1400,
+    rotate: 20,
+  },
+  {
+    texto: "full",
+    fuente: "hamzi",
+    derecha: 150,
+    y: 60,
+    rotate: -25,
+  },
+  {
+    texto: "design",
+    fuente: "hamzi",
+    izquierda: 50,
+    y: 950,
+  },
+  {
+    texto: "skill",
+    fuente: "marker",
+    derecha: 2,
+    y: 1300,
+    rotate: 15,
+  },
+  {
+    texto: "use",
+    fuente: "hamzi",
+    izquierda: 5,
+    y: 2200,
+    rotate: 0,
+  },
+  {
+    texto: "df",
+    fuente: "marker",
+    derecha: 40,
+    y: 800,
+  },
+  {
+    texto: "comp",
+    fuente: "hamzi",
+    izquierda: 70,
+    y: 1900,
+    rotate: 25,
+  },
+  {
+    texto: "out",
+    fuente: "hamzi",
+    derecha: 12,
+    y: 2000,
+    rotate: 0,
+  },
+];
+
+export const HOW: { color: string; imagen: string }[] = [
+  {
+    color: "#FF0000",
+    imagen: "howtoweb3fashion1.png",
+  },
+  {
+    color: "#00FF00",
+    imagen: "howtoweb3fashion2.png",
+  },
+  {
+    color: "#FFA0A0",
+    imagen: "howtoweb3fashion3.png",
+  },
+  {
+    color: "#FFFF00",
+    imagen: "howtoweb3fashion4.png",
+  },
+  {
+    color: "#00FFFF",
+    imagen: "howtoweb3fashion5.png",
+  },
+  {
+    color: "#0000AA",
+    imagen: "howtoweb3fashion6.png",
+  },
+  {
+    color: "#BE8A13",
+    imagen: "howtoweb3fashion7.png",
+  },
+];

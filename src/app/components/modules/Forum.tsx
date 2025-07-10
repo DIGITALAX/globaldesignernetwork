@@ -3,11 +3,15 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
 import { ForumProps } from "../types/common.types";
+import useForum from "../hooks/useForum";
+import { INFURA_GATEWAY } from "@/app/lib/constantes";
 
 export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
+  const { pubCargando, pubs } = useForum();
+
   return (
-    <div className="relative w-full h-fit flex flex-col" id="Forum">
-      <div className="relative w-full h-[90vh] wheatpaste-texture underground-texture weathered-poster crinkled-wheatpaste wheatpaste-fold poster-wrinkles">
+    <div className="relative w-full h-fit flex flex-col bg-white pb-4" id="Forum">
+      <div className="relative w-full h-[20rem] sm:h-[25rem] md:h-[30rem] lg:h-[40rem] wheatpaste-texture underground-texture weathered-poster crinkled-wheatpaste wheatpaste-fold poster-wrinkles">
         <Image
           draggable={false}
           alt="GDN Forum"
@@ -16,60 +20,63 @@ export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
           layout="fill"
         />
       </div>
-      <div className="meet-omega-section">
-        <video
-          autoPlay
-          loop
-          muted
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        >
+      <div className="relative w-full h-8 flex">
+        <video autoPlay loop muted className="w-full h-full object-cover">
           <source src="/videos/chica_gdn.mp4" />
         </video>
-        <div className="omega-container">
-          <header className="omega-header">
-            <div className="omega-header-title">{dict?.forum}</div>
-            <div className="omega-header-lines">
-              <div className="header-line"></div>
-              <div className="header-line"></div>
-              <div className="header-line"></div>
-              <div className="header-line"></div>
-              <div className="header-line long-line"></div>
-              <div className="header-line"></div>
-              <div className="header-line"></div>
-              <div className="header-line"></div>
-              <div className="header-line"></div>
-            </div>
-          </header>
-
-          <main className="omega-main">
-            <div className="omega-main-title">{dict?.post}</div>
-
-            <div className="relative flex flex-row gap-2">
-              <div className="omega-description">
-                <p>{dict?.date}</p>
-              </div>
-              <div className="flex relative w-fit h-fit hover:opacity-70">
-                <button
-                  className="flex flex-row cursor-pointer"
-                  onClick={() => window.open("https://cc0web3fashion.com")}
+      </div>
+      <div className="relative w-full flex py-32 px-4 flex-col gap-2">
+        <div className="relative w-full h-fit flex flex-col gap-3 sm:flex-row flex-wrap justify-center sm:justify-between items-center">
+          <div className="relative w-full sm:w-60 flex text-left font-count text-black">
+            {dict?.take}
+          </div>
+          <div className="relative  h-fit flex font-at w-full sm:w-80 text-right">
+            {dict?.post1}
+          </div>
+        </div>
+      </div>
+      <div className="relative w-full h-fit flex flex-col gap-2 px-6">
+        <div className="font-at w-full h-fit flex items-end justify-end">
+          <div
+            className="relative w-fit h-fit flex cursor-pointer"
+            onClick={() => window.open("https://cc0web3fashion.com/forum/")}
+          >{`${dict?.more} >`}</div>
+        </div>
+        <div className="relative w-full h-fit grid items-center justify-center grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+          {pubCargando
+            ? Array.from({ length: 24 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="relative w-full h-fit flex animate-pulse bg-black"
                 >
-                  <span className="font-poster w-fit h-fit p-1 bg-white">
-                    {dict?.more}
-                  </span>
-                  <div className="bg-black text-white w-fit flex items-center justify-center h-full">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
-                    </svg>
+                  <div className="w-full h-20 sm:h-28 md:h-32 lg:h-40 flex relative">
+                    <div className="absolute top-0 left-0 font-at bg-white p-1 text-sm text-black">
+                      {i}
+                    </div>
                   </div>
-                </button>
-              </div>
-            </div>
-          </main>
+                </div>
+              ))
+            : pubs.map((pub, i) => (
+                <div
+                  key={i}
+                  className="relative w-full h-fit flex bg-black"
+                >
+                  <div className="w-full h-20 sm:h-28 md:h-32 lg:h-40 flex relative">
+                    <Image
+                      draggable={false}
+                      layout="fill"
+                      objectFit="cover"
+                      src={`${INFURA_GATEWAY}/ipfs/${
+                        pub.metadata?.images?.[0]?.split("ipfs://")?.[1]
+                      }`}
+                      alt={pub.metadata?.title}
+                    />
+                    <div className="absolute top-0 left-0 font-at bg-white p-1 text-sm text-black">
+                      {i}
+                    </div>
+                  </div>
+                </div>
+              ))}
         </div>
       </div>
     </div>
