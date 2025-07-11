@@ -5,12 +5,16 @@ import { FunctionComponent } from "react";
 import { ForumProps } from "../types/common.types";
 import useForum from "../hooks/useForum";
 import { INFURA_GATEWAY } from "@/app/lib/constantes";
+import { GrLanguage } from "react-icons/gr";
 
 export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
-  const { pubCargando, pubs } = useForum();
+  const { pubCargando, pubs, changeLanguage } = useForum();
 
   return (
-    <div className="relative w-full h-fit flex flex-col bg-white pb-4" id="Forum">
+    <div
+      className="relative w-full h-fit flex flex-col bg-white pb-4"
+      id="Forum"
+    >
       <div className="relative w-full h-[20rem] sm:h-[25rem] md:h-[30rem] lg:h-[40rem] wheatpaste-texture underground-texture weathered-poster crinkled-wheatpaste wheatpaste-fold poster-wrinkles">
         <Image
           draggable={false}
@@ -57,10 +61,7 @@ export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
                 </div>
               ))
             : pubs.map((pub, i) => (
-                <div
-                  key={i}
-                  className="relative w-full h-fit flex bg-black"
-                >
+                <div key={i} className="relative w-full h-fit flex bg-black">
                   <div className="w-full h-20 sm:h-28 md:h-32 lg:h-40 flex relative">
                     <Image
                       draggable={false}
@@ -77,6 +78,14 @@ export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
                   </div>
                 </div>
               ))}
+        </div>
+        <div className="relative w-full h-fit flex items-end justify-end mt-6">
+          <GrLanguage
+            size={12}
+            className="cursor-pointer"
+            color="black"
+            onClick={() => changeLanguage()}
+          />
         </div>
       </div>
     </div>

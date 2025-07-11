@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Collection } from "../types/common.types";
 import { getCollectionsForum } from "../../../../graphql/getAllCollections";
+import { usePathname, useRouter } from "next/navigation";
 
 const useForum = () => {
   const [pubs, setPubs] = useState<Collection[]>([]);
   const [pubCargando, setPubCargando] = useState<boolean>(false);
+  const router = useRouter();
+  const path = usePathname();
 
   const getItemData = async () => {
     setPubCargando(true);
@@ -17,6 +20,18 @@ const useForum = () => {
     setPubCargando(false);
   };
 
+  const changeLanguage = () => {
+    const segments = path.split("/");
+    segments[1] = path.includes("/en/") ? "es" : "en";
+    const newPath = segments.join("/");
+
+    document.cookie = `NEXT_LOCALE=${
+      path.includes("/en/") ? "es" : "en"
+    }; path=/; SameSite=Lax`;
+
+    router.push(newPath);
+  };
+
   useEffect(() => {
     if (pubs?.length < 1) {
       getItemData();
@@ -26,6 +41,7 @@ const useForum = () => {
   return {
     pubCargando,
     pubs,
+    changeLanguage
   };
 };
 
