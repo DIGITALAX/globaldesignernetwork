@@ -116,7 +116,7 @@
   }
 
   .font-count {
-    font-family: var(--font-count);
+    font-family: var(--font-count), var(--font-poster);
   }
 
   .font-hamzi {
