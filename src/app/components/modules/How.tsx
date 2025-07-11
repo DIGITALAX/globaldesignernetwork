@@ -13,11 +13,15 @@ const How: FunctionComponent<HowProps> = ({ dict }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      
       if (howRef.current) {
         const rect = howRef.current.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        setShowColorPicker(isVisible);
+        const windowHeight = window.innerHeight;
+        
+        // Show ColorPicker only when user is "inside" the How component
+        // This means: How component top is at/above screen top AND How component bottom is at/below screen bottom
+        const isFillingScreen = rect.top <= 0 && rect.bottom >= windowHeight;
+        
+        setShowColorPicker(isFillingScreen);
       }
     };
 

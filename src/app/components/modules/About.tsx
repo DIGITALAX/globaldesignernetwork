@@ -93,7 +93,7 @@ const About: FunctionComponent<AboutProps> = ({ dict }) => {
             </div>
           </div>
           <div className="relative w-full h-fit flex flex-col gap-7 tracking-wide font-agave text-xs items-end justify-end">
-            <div className="relative w-fit h-fit flex text-right">
+            <div className="relative w-fit h-fit flex text-right uppercase">
               {dict?.about1}
             </div>
             <div className="relative w-full h-fit text-right flex flex-col items-end justify-end">

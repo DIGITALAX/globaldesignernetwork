@@ -10,8 +10,8 @@ const Radio: FunctionComponent<RadioProps> = ({ dict }) => {
   const { handlePlay, currentVid, setVidDetails, vidDetails, play } =
     useVideo();
   return (
-    <div className="relative w-full h-fit flex flex-col bg-black gap-10 p-3">
-      <div className="relative font-kare text-white text-[2rem] galaxy:text-[4rem] sm:text-[6rem] mid:text-[8rem] lg:text-[10rem] xl:text-[12rem] flex -left-5 lg:-left-16">
+    <div className="relative font-kare w-full h-fit flex flex-col bg-black gap-10 p-3">
+      <div className="relative text-white text-[2rem] galaxy:text-[4rem] sm:text-[6rem] mid:text-[8rem] lg:text-[10rem] xl:text-[12rem] flex w-full h-fit items-end justify-end">
         {dict?.radio}
       </div>
       <div className="relative w-full h-fit flex flex-col md:flex-row justify-between items-start gap-3">
