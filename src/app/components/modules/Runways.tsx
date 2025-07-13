@@ -1,3 +1,5 @@
+"use client";
+
 import { FunctionComponent } from "react";
 import { RunwaysProps } from "../types/common.types";
 import { RUNWAY } from "@/app/lib/constantes";
@@ -12,7 +14,7 @@ const Runways: FunctionComponent<RunwaysProps> = ({ dict }) => {
         </h2>
         <div className="flex items-center justify-center gap-4 mb-8">
           <div className="w-12 h-px bg-black"></div>
-          <span className="text-sm uppercase tracking-widest text-gray-300">
+          <span className="text-sm cursor-pointer hover:underline uppercase tracking-widest text-gray-400" onClick={() => window.open("https://web3fashionweek.com/")}>
             {dict?.week}
           </span>
           <div className="w-12 h-px bg-black"></div>
