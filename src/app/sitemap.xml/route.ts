@@ -74,6 +74,12 @@ export async function GET() {
          `
         )}
       </url>
+      <url>
+        <loc>${baseUrl}/market/</loc>
+      </url>
+      <url>
+        <loc>${baseUrl}/indie-designers/</loc>
+      </url>
     </urlset>`;
 
   return new NextResponse(body, {

@@ -196,6 +196,7 @@
   .wheatpaste-texture::before {
     content: "";
     position: absolute;
+    overflow-x: hidden;
     top: 0;
     left: 0;
     right: 0;
@@ -276,11 +277,13 @@
   .diagonal-layout {
     transform: rotate(-2deg);
     transform-origin: center;
+    overflow-x: hidden;
   }
 
   .diagonal-layout-reverse {
     transform: rotate(2deg);
     transform-origin: center;
+    overflow-x: hidden;
   }
 
   .torn-edge {
@@ -656,15 +659,18 @@
 
   .crinkled-wheatpaste {
     position: relative;
+    overflow-x: hidden;
   }
 
   .crinkled-wheatpaste::before {
     content: "";
     position: absolute;
+
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    overflow-x: hidden;
     background: linear-gradient(
         45deg,
         transparent 30%,
@@ -706,6 +712,7 @@
   .crinkled-wheatpaste::after {
     content: "";
     position: absolute;
+    overflow-x: hidden;
     top: 0;
     left: 0;
     right: 0;
@@ -748,11 +755,13 @@
 
   .wheatpaste-fold {
     position: relative;
+    overflow-x: hidden;
   }
 
   .wheatpaste-fold::before {
     content: "";
     position: absolute;
+    overflow-x: hidden;
     top: 0;
     left: 0;
     right: 0;
@@ -782,11 +791,13 @@
 
   .poster-wrinkles {
     position: relative;
+    overflow-x: hidden;
   }
 
   .poster-wrinkles::after {
     content: "";
     position: absolute;
+    overflow-x: hidden;
     top: 0;
     left: 0;
     right: 0;
@@ -1054,4 +1065,12 @@ div::-webkit-scrollbar-thumb {
   50% {
     background-position: 100% 50%;
   }
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
 }

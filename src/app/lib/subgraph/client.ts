@@ -1,10 +1,35 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-const printLink = new HttpLink({
-  uri: `https://gateway.thegraph.com/api/${process.env.NEXT_PUBLIC_GRAPH_KEY}/subgraphs/id/5BRsShsfv6tEucvDwGtrstRhg1fpvx2pMRWh5GDovE9K`,
+const getPrintUri = () => {
+  if (typeof window === "undefined") {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    return `${baseUrl}/api/graphql/print`;
+  }
+  return "/api/graphql/print";
+};
+
+const httpLinkPrint = new HttpLink({
+  uri: getPrintUri(),
 });
 
 export const graphClient = new ApolloClient({
-  link: printLink,
+  link: httpLinkPrint,
+  cache: new InMemoryCache(),
+});
+
+const getGDNUri = () => {
+  if (typeof window === "undefined") {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    return `${baseUrl}/api/graphql/gdn`;
+  }
+  return "/api/graphql/gdn";
+};
+
+const gdnLink = new HttpLink({
+  uri: getGDNUri(),
+});
+
+export const graphGDNClient = new ApolloClient({
+  link: gdnLink,
   cache: new InMemoryCache(),
 });

@@ -70,7 +70,7 @@ export const getCollectionsPaginated = async (
   const timeoutPromise = new Promise((resolve) => {
     timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000); 
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);
@@ -149,7 +149,7 @@ export const getCollectionsForum = async (
   const timeoutPromise = new Promise((resolve) => {
     timeoutId = setTimeout(() => {
       resolve({ timedOut: true });
-    }, 60000); // 1 minute timeout
+    }, 60000); 
   });
 
   const result: any = await Promise.race([queryPromise, timeoutPromise]);

@@ -1,9 +1,77 @@
-import { Channel, Microbrand, Runway } from "../components/types/common.types";
+import {
+  Channel,
+  Microbrand,
+  Runway,
+} from "../components/Common/types/common.types";
+import { CoreContractAddresses } from "../components/Market/types/market.types";
 
 export const LOCALES: string[] = ["en", "es"];
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const INFURA_GATEWAY_INTERNAL: string =
   "https://globaldesignernetwork.com/api/infura/";
+
+export const NETWORKS = {
+  LENS_TESTNET: {
+    chainId: 37111,
+    name: "Lens Network Testnet",
+    rpcUrl: "https://rpc.testnet.lens.dev",
+    blockExplorer: "https://block-explorer.testnet.lens.dev",
+  },
+  LENS_MAINNET: {
+    chainId: 232,
+    name: "Lens Network",
+    rpcUrl: "https://rpc.lens.xyz",
+    blockExplorer: "https://explorer.lens.xyz",
+  },
+} as const;
+
+export type NetworkConfig = (typeof NETWORKS)[keyof typeof NETWORKS];
+
+export const DEFAULT_NETWORK =
+  process.env.NODE_ENV === "production"
+    ? NETWORKS.LENS_MAINNET
+    : NETWORKS.LENS_TESTNET;
+
+export const getCurrentNetwork = (): NetworkConfig => {
+  // const isMainnet = process.env.NEXT_PUBLIC_NETWORK === "mainnet";
+
+  // isMainnet ?
+
+  return NETWORKS.LENS_MAINNET;
+
+  // : NETWORKS.LENS_TESTNET;
+};
+
+export const CORE_CONTRACT_ADDRESSES: Record<number, CoreContractAddresses> = {
+  [NETWORKS.LENS_TESTNET.chainId]: {
+    market: "0x5908fb43Ca81893FA244Bf7378F854BA69f13B32",
+    designers: "0x0bBF593C164942f7D8b8bA07797E50d05C30ef23",
+    mona: "0x18921123f3457AD3c974f2edfCb1053FB29450AC",
+    access: "0xe6339ee0bE94a703FF711132313da52702fE4E59",
+    w3f: "0x9c4De2443448D3400642B97595f44e323A20D7c1",
+    nft: "0x3901294b608DE0235485B6eAfDC9A980a5c81B95",
+  },
+  [NETWORKS.LENS_MAINNET.chainId]: {
+    market: "0x6433AD215F13F5642308bA8De95ffe76b7032c7f",
+    designers: "0x355dC5265bd765215905Cd3838E8C5F5cbcc0964",
+    mona: "0x28547B5b6B405A1444A17694AC84aa2d6A03b3Bd",
+    access: "0xf3ed107fAd12c0De3399EcA303e66a9981a174fc",
+    w3f: "0xD1F5BeC17de63673A08B71C525Fc163D4Ea7b95f",
+    nft: "0xB59E2aB12Ea768013D1efc41edA7007A2FFF0FdF",
+  },
+};
+
+export const getCoreContractAddresses = (
+  chainId: number
+): CoreContractAddresses => {
+  const addresses = CORE_CONTRACT_ADDRESSES[chainId];
+  if (!addresses) {
+    throw new Error(
+      `Core contract addresses not found for chain ID: ${chainId}`
+    );
+  }
+  return addresses;
+};
 
 export const RUNWAY: Runway[] = [
   {
