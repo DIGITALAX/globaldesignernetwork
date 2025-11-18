@@ -2,7 +2,7 @@ import { graphGDNClient } from "@/app/lib/subgraph/client";
 import { FetchResult, gql } from "@apollo/client";
 
 const BUYER = `
-  query($buyer: String) {
+  query($buyer: String!) {
   purchases(where: {buyer: $buyer}) {
           purchaseId
           collectionId

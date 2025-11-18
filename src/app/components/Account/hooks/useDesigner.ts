@@ -42,6 +42,7 @@ const useDesigner = (dict?: any) => {
         args: [address],
         account: address,
       });
+      setVerified(true);
       if (verified) {
         const data = await getDesigner(address);
         let des = await ensureMetadata(data?.data?.designers?.[0]);
@@ -67,7 +68,10 @@ const useDesigner = (dict?: any) => {
           );
 
           const orphanCollections = processedCollections.filter(
-            (col) => !col?.drop || col?.drop?.dropId === null || col?.drop?.dropId === undefined
+            (col) =>
+              !col?.drop ||
+              col?.drop?.dropId === null ||
+              col?.drop?.dropId === undefined
           );
 
           const finalDrops = [...dropsWithCollections];
@@ -91,9 +95,6 @@ const useDesigner = (dict?: any) => {
             ...des,
             drops: finalDrops,
           });
-          setVerified(true);
-        } else {
-          setVerified(false);
         }
       } else {
         setVerified(false);
@@ -105,7 +106,7 @@ const useDesigner = (dict?: any) => {
   };
 
   useEffect(() => {
-    if (address && !designer && !verified) {
+    if (address && !designer) {
       verifyDesigner();
     }
   }, [address]);

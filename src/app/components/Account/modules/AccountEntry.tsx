@@ -14,6 +14,7 @@ const AccountEntry: FunctionComponent<{dict: any}> = ({ dict }) => {
   const [activeTab, setActiveTab] = useState<"purchases" | "designer">("purchases");
   const { designer, verified } = useDesigner(dict);
 
+
   if (!isConnected || !address) {
     return (
       <div className="relative flex flex-col min-h-screen">

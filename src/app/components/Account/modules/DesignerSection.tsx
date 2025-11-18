@@ -14,6 +14,7 @@ const DesignerSection: FunctionComponent<DesignerSectionProps> = ({
     "cuenta"
   );
 
+
   if (!verified) {
     return (
       <div className="p-6">
