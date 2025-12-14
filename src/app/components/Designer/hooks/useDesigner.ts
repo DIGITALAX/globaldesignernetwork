@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Designer, Drop } from "../types./designer.types";
+import { Collection, Designer, Drop } from "../types./designer.types";
 import { getDesigner } from "../../../../../graphql/gdn/getDesigners";
 import { ensureMetadata } from "@/app/lib/utils";
 
@@ -12,7 +12,9 @@ const useDesigner = (designerWallet: string | undefined) => {
     setDesignerLoading(true);
     try {
       const data = await getDesigner(designerWallet);
+      console.log({ data, designerWallet });
       let foundDesigner = data?.data?.designers?.[0];
+      console.log({ foundDesigner });
       foundDesigner = await ensureMetadata(data?.data?.designers?.[0]);
       if (foundDesigner) {
         setDesigner({
@@ -23,9 +25,13 @@ const useDesigner = (designerWallet: string | undefined) => {
               return {
                 ...data,
                 collections: await Promise.all(
-                  drop?.collections?.map(async (col: any) => {
-                    return await ensureMetadata(col);
-                  })
+                  foundDesigner?.collections
+                    ?.filter(
+                      (col: Collection) => col?.drop?.dropId == drop?.dropId
+                    )
+                    ?.map(async (col: Collection) => {
+                      return await ensureMetadata(col);
+                    }) || []
                 ),
               };
             })
