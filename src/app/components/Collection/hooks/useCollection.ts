@@ -19,13 +19,13 @@ const useCollection = (
         collectionContract
       );
 
-
       let foundCollection = data?.data?.collections?.[0];
 
       if (foundCollection) {
         foundCollection = await ensureMetadata(foundCollection);
         setCollection({
           ...foundCollection,
+          drop: await ensureMetadata(foundCollection.drop),
           designerProfile: await ensureMetadata(
             foundCollection?.designerProfile
           ),
