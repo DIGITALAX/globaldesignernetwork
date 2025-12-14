@@ -12,9 +12,7 @@ const useDesigner = (designerWallet: string | undefined) => {
     setDesignerLoading(true);
     try {
       const data = await getDesigner(designerWallet);
-      console.log({ data, designerWallet });
       let foundDesigner = data?.data?.designers?.[0];
-      console.log({ foundDesigner });
       foundDesigner = await ensureMetadata(data?.data?.designers?.[0]);
       if (foundDesigner) {
         setDesigner({

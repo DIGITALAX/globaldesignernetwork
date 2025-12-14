@@ -11,7 +11,6 @@ const DesignerEntry: FunctionComponent<{ dict: any }> = ({ dict }) => {
   const { designer: designerWallet } = useParams();
   const router = useRouter();
   const { designerLoading, designer } = useDesigner(designerWallet as string);
-  console.log({designerLoading, designer})
   const designerCollections: Collection[] =
     designer?.drops?.flatMap((drop) => drop.collections) || [];
 
