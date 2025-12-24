@@ -151,13 +151,13 @@ const MarketEntry: FunctionComponent<{ dict: any }> = ({ dict }) => {
                   className="opacity-30"
                 />
               </div>
-              <div className="relative w-full h-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 overflow-y-auto">
+              <div className="relative w-full h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 overflow-y-auto">
                 {collections
                   .filter((col) => col.drop?.dropId === featuredDrop?.dropId)
                   .map((collection: Collection) => (
                     <div
                       key={collection.collectionId}
-                      className="relative w-full h-48 cursor-pointer hover:scale-105 transition-transform duration-300"
+                      className="relative w-full aspect-[3/4] cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() =>
                         router.push(
                           `/collection/${collection.collectionContract}/${collection.collectionId}`
