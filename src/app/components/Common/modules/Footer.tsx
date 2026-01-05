@@ -1,0 +1,54 @@
+"use client";
+
+import { FunctionComponent } from "react";
+import { GrLanguage } from "react-icons/gr";
+import { usePathname, useRouter } from "next/navigation";
+
+const Footer: FunctionComponent = () => {
+  const router = useRouter();
+  const path = usePathname();
+
+  const changeLanguage = () => {
+    const segments = path.split("/");
+    const currentLang = segments[1];
+    let nextLang = "en";
+
+    if (currentLang === "en") {
+      nextLang = "es";
+    } else if (currentLang === "es") {
+      nextLang = "pt";
+    } else {
+      nextLang = "en";
+    }
+
+    segments[1] = nextLang;
+    const newPath = segments.join("/");
+
+    document.cookie = `NEXT_LOCALE=${nextLang}; path=/; SameSite=Lax`;
+
+    router.push(newPath);
+  };
+
+  const getCurrentLangLabel = () => {
+    if (path.includes("/en/")) return "EN → ES";
+    if (path.includes("/es/")) return "ES → PT";
+    if (path.includes("/pt/")) return "PT → EN";
+    return "EN → ES";
+  };
+
+  return (
+    <div className="relative w-full h-fit flex items-center justify-center py-6 bg-white border-t-2 border-black">
+      <div
+        className="relative flex flex-row items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity"
+        onClick={changeLanguage}
+      >
+        <GrLanguage size={20} color="black" />
+        <span className="text-sm font-at text-black">
+          {getCurrentLangLabel()}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default Footer;

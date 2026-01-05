@@ -255,5 +255,6 @@
   "viewMedia": "VIEW MEDIA",
   "insufficientMona": "Insufficient MONA balance",
   "orphanCollections": "Orphan Collections",
-  "orphanCollectionsDescription": "Collections without a drop"
+  "orphanCollectionsDescription": "Collections without a drop",
+  "mainPort": "MAIN PORT"
 }

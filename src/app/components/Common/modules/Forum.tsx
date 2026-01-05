@@ -5,10 +5,9 @@ import { FunctionComponent } from "react";
 import { ForumProps } from "../types/common.types";
 import useForum from "../hooks/useForum";
 import { INFURA_GATEWAY } from "@/app/lib/constantes";
-import { GrLanguage } from "react-icons/gr";
 
 export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
-  const { pubCargando, pubs, changeLanguage } = useForum();
+  const { pubCargando, pubs } = useForum();
 
   return (
     <div
@@ -78,14 +77,6 @@ export const Forum: FunctionComponent<ForumProps> = ({ dict }) => {
                   </div>
                 </div>
               ))}
-        </div>
-        <div className="relative w-full h-fit flex items-end justify-end mt-6">
-          <GrLanguage
-            size={12}
-            className="cursor-pointer"
-            color="black"
-            onClick={() => changeLanguage()}
-          />
         </div>
       </div>
     </div>

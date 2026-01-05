@@ -36,24 +36,40 @@ const Header: FunctionComponent<HeaderProps> = ({ dict }) => {
         <div className="absolute top-0 left-0 flex w-full h-fit px-4 py-3 items-center justify-between">
           <div className="relative w-fit h-fit flex flex-row gap-6 flex-wrap items-center justify-center">
             {[
-              { titulo: dict?.account, ref: "/account" },
-              { titulo: dict?.designers, ref: "/indie-designers" },
-              { titulo: dict?.market, ref: "/market" },
-              { titulo: dict?.for, ref: "https://cc0web3fashion.com/forum/" },
+              { titulo: dict?.account, ref: "/account", pathMatch: "account" },
+              { titulo: dict?.designers, ref: "/indie-designers", pathMatch: "indie-designers" },
+              { titulo: dict?.market, ref: "/market", pathMatch: "market" },
+              { titulo: dict?.for, ref: "https://cc0web3fashion.com/forum/", pathMatch: "" },
             ].map((item, i) => {
+              const isOnThisPage = item.pathMatch && path?.includes(item.pathMatch);
+              const isHomePage = path === "/" || path === "/en" || path === "/es" || path === "/pt";
+
               return (
                 <div
                   key={i}
                   onClick={() => {
                     if (item.ref.startsWith("/")) {
-                      router.push(item.ref);
+                      const lang = path.split("/")[1];
+                      if (isOnThisPage) {
+                        if (lang === "en" || lang === "es" || lang === "pt") {
+                          router.push(`/${lang}`);
+                        } else {
+                          router.push("/");
+                        }
+                      } else {
+                        if (lang === "en" || lang === "es" || lang === "pt") {
+                          router.push(`/${lang}${item.ref}`);
+                        } else {
+                          router.push(item.ref);
+                        }
+                      }
                     } else {
                       window.open(item.ref);
                     }
                   }}
                   className="relative w-fit text-sm sm:text-xl uppercase h-fit flex cursor-pointer font-stencil text-white hover:underline"
                 >
-                  {item.titulo}
+                  {isOnThisPage && !isHomePage ? dict?.mainPort : item.titulo}
                 </div>
               );
             })}

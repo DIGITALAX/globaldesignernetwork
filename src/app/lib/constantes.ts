@@ -5,7 +5,7 @@ import {
 } from "../components/Common/types/common.types";
 import { CoreContractAddresses } from "../components/Market/types/market.types";
 
-export const LOCALES: string[] = ["en", "es"];
+export const LOCALES: string[] = ["en", "es", "pt"];
 export const INFURA_GATEWAY: string = "https://thedial.infura-ipfs.io";
 export const INFURA_GATEWAY_INTERNAL: string =
   "https://globaldesignernetwork.com/api/infura/";

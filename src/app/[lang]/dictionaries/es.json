@@ -255,5 +255,6 @@
   "viewMedia": "VER MEDIA",
   "insufficientMona": "Saldo de MONA insuficiente",
   "orphanCollections": "Colecciones Huérfanas",
-  "orphanCollectionsDescription": "Colecciones sin drop"
+  "orphanCollectionsDescription": "Colecciones sin drop",
+  "mainPort": "PUERTO PRINCIPAL"
 }
