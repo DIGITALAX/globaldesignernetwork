@@ -55,19 +55,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const locale = getLocale(request);
-
-  if (locale === defaultLocale) {
-    return NextResponse.next();
-  }
-
-  const response = NextResponse.redirect(
-    new URL(`/${locale}${pathname}`, request.url)
-  );
-
-  response.cookies.set("NEXT_LOCALE", locale, { path: "/", sameSite: "lax" });
-
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
