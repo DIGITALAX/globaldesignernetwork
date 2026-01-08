@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { LOCALES } from "./lib/constantes";
 import Providers from "./providers";
+import Footer from "./components/Common/modules/Footer";
 
 export const metadata: Metadata = {
   title: "Global Designer Network",
@@ -90,7 +91,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="selection:bg-red-700"><Providers>{children}</Providers></body>
+      <body className="selection:bg-red-700">
+        <Providers>
+          {children}
+          <Footer />
+        </Providers>
+      </body>
     </html>
   );
 }

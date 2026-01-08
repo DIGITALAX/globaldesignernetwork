@@ -17,12 +17,19 @@ const Footer: FunctionComponent = () => {
       nextLang = "es";
     } else if (currentLang === "es") {
       nextLang = "pt";
+    } else if (currentLang === "pt") {
+      nextLang = "en";
     } else {
       nextLang = "en";
     }
 
-    segments[1] = nextLang;
-    const newPath = segments.join("/");
+    let newPath;
+    if (currentLang === "en" || currentLang === "es" || currentLang === "pt") {
+      segments[1] = nextLang;
+      newPath = segments.join("/");
+    } else {
+      newPath = `/${nextLang}${path}`;
+    }
 
     document.cookie = `NEXT_LOCALE=${nextLang}; path=/; SameSite=Lax`;
 
@@ -30,9 +37,12 @@ const Footer: FunctionComponent = () => {
   };
 
   const getCurrentLangLabel = () => {
-    if (path.includes("/en/")) return "EN → ES";
-    if (path.includes("/es/")) return "ES → PT";
-    if (path.includes("/pt/")) return "PT → EN";
+    const segments = path.split("/");
+    const currentLang = segments[1];
+
+    if (currentLang === "en") return "EN → ES";
+    if (currentLang === "es") return "ES → PT";
+    if (currentLang === "pt") return "PT → EN";
     return "EN → ES";
   };
 

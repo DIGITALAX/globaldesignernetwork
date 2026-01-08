@@ -33,7 +33,7 @@ const Header: FunctionComponent<HeaderProps> = ({ dict }) => {
         >
           <source src="/videos/gdn_table.mp4" />
         </video>
-        <div className="absolute top-0 left-0 flex w-full h-fit px-4 py-3 items-center justify-between">
+        <div className="absolute top-0 left-0 flex w-full h-fit px-4 py-3 items-center justify-between z-10">
           <div className="relative w-fit h-fit flex flex-row gap-6 flex-wrap items-center justify-center">
             {[
               { titulo: dict?.account, ref: "/account", pathMatch: "account" },

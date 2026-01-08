@@ -1,5 +1,4 @@
 import ModalsEntry from "../components/Modals/modules/ModalsEntry";
-import Footer from "../components/Common/modules/Footer";
 
 export type tParams = Promise<{ lang: string }>;
 export async function generateStaticParams() {
@@ -16,7 +15,6 @@ export default function RootLayout({
   return (
     <>
       {children}
-      <Footer />
       <ModalsEntry params={params} />
     </>
   );
