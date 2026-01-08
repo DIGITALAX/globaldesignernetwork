@@ -37,12 +37,34 @@ const Header: FunctionComponent<HeaderProps> = ({ dict }) => {
           <div className="relative w-fit h-fit flex flex-row gap-6 flex-wrap items-center justify-center">
             {[
               { titulo: dict?.account, ref: "/account", pathMatch: "account" },
-              { titulo: dict?.designers, ref: "/indie-designers", pathMatch: "indie-designers" },
+              {
+                titulo: dict?.designers,
+                ref: "/indie-designers",
+                pathMatch: "indie-designers",
+              },
               { titulo: dict?.market, ref: "/market", pathMatch: "market" },
-              { titulo: dict?.for, ref: "https://cc0web3fashion.com/forum/", pathMatch: "" },
+              {
+                titulo: "W3FW",
+                ref: path?.includes("/es/")
+                  ? "https://web3fashionweek.com/es/"
+                  : path.includes("/pt/")
+                  ? "https://web3fashionweek.com/pt/"
+                  : "https://web3fashionweek.com/",
+                pathMatch: "",
+              },
+              {
+                titulo: dict?.for,
+                ref: "https://cc0web3fashion.com/forum/",
+                pathMatch: "",
+              },
             ].map((item, i) => {
-              const isOnThisPage = item.pathMatch && path?.includes(item.pathMatch);
-              const isHomePage = path === "/" || path === "/en" || path === "/es" || path === "/pt";
+              const isOnThisPage =
+                item.pathMatch && path?.includes(item.pathMatch);
+              const isHomePage =
+                path === "/" ||
+                path === "/en" ||
+                path === "/es" ||
+                path === "/pt";
 
               return (
                 <div
