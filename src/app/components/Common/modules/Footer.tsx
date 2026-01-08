@@ -11,7 +11,7 @@ const Footer: FunctionComponent = () => {
   const changeLanguage = () => {
     const segments = path.split("/");
     const currentLang = segments[1];
-    let nextLang = "en";
+    let nextLang = "es";
 
     if (currentLang === "en") {
       nextLang = "es";
@@ -20,7 +20,7 @@ const Footer: FunctionComponent = () => {
     } else if (currentLang === "pt") {
       nextLang = "en";
     } else {
-      nextLang = "en";
+      nextLang = "es";
     }
 
     let newPath;
@@ -28,7 +28,11 @@ const Footer: FunctionComponent = () => {
       segments[1] = nextLang;
       newPath = segments.join("/");
     } else {
-      newPath = `/${nextLang}${path}`;
+      if (path === "/") {
+        newPath = `/${nextLang}/`;
+      } else {
+        newPath = `/${nextLang}${path}`;
+      }
     }
 
     document.cookie = `NEXT_LOCALE=${nextLang}; path=/; SameSite=Lax`;
