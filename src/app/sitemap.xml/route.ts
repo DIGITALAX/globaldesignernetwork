@@ -131,7 +131,7 @@ export async function GET() {
         <loc>${url}</loc>
         <lastmod>${lastmod}</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
+        <priority>1</priority>
       </url>`;
     });
   });
@@ -146,7 +146,7 @@ export async function GET() {
         <loc>${url}</loc>
         <lastmod>${lastmod}</lastmod>
         <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
+        <priority>1</priority>
       </url>`;
     });
   });

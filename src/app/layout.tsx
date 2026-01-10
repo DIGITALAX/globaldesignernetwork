@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { LOCALES } from "./lib/constantes";
 import Providers from "./providers";
 import Footer from "./components/Common/modules/Footer";
 
@@ -12,13 +11,6 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
     },
-  },
-  alternates: {
-    canonical: `https://globaldesignernetwork.com/`,
-    languages: LOCALES.reduce((acc, item) => {
-      acc[item] = `https://globaldesignernetwork.com/`;
-      return acc;
-    }, {} as { [key: string]: string }),
   },
   keywords:
     "Web3, Web3 Fashion, Moda Web3, Open Source, CC0, Emma-Jane MacKinnon-Lee, Open Source LLMs, DIGITALAX, F3Manifesto, digitalax.xyz, f3manifesto.xyz, Women, Life, Freedom.",
