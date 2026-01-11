@@ -6,3 +6,4 @@ export interface SuccessData {
 export  interface ErrorData {
   message: string;
 }
+
