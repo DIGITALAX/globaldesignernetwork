@@ -101,9 +101,9 @@ const W3F: FunctionComponent<{ dict: any }> = ({ dict }) => {
                       {dict?.w3fRecentTx}
                     </h3>
                     <div className="space-y-4">
-                      {recentTransactions.map((tx) => (
+                      {recentTransactions.map((tx, i) => (
                         <div
-                          key={tx.hash}
+                          key={i}
                           className="border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
