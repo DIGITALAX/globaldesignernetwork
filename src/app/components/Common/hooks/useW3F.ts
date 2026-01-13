@@ -17,7 +17,9 @@ const useW3F = () => {
 
   const publicClient = usePublicClient();
   const network = getCurrentNetwork();
-  const contracts = getCoreContractAddresses(network.chainId);
+  const chainId = publicClient?.chain?.id ?? network.chainId;
+  const contracts = getCoreContractAddresses(chainId);
+  const zeroAddress = "0x0000000000000000000000000000000000000000";
 
   const fetchW3FStats = async (): Promise<W3FStats> => {
     if (!publicClient || !contracts.w3f) {
@@ -51,27 +53,92 @@ const useW3F = () => {
 
     try {
       const latestBlock = await publicClient.getBlockNumber();
-      const fromBlock = latestBlock - BigInt(100);
+      const lookbacks = [BigInt(5000), BigInt(50000), BigInt(250000)];
 
-      const transferLogs = await publicClient.getLogs({
-        address: contracts.w3f,
-        event: {
-          type: "event",
-          name: "Transfer",
-          inputs: [
-            { indexed: true, name: "from", type: "address" },
-            { indexed: true, name: "to", type: "address" },
-            { indexed: false, name: "value", type: "uint256" },
-          ],
-        },
-        fromBlock,
-        toBlock: latestBlock,
-      });
+      const fetchLogsInRange = async (fromBlock: bigint) => {
+        const [transferLogs, mintedLogs] = await Promise.all([
+          publicClient.getLogs({
+            address: contracts.w3f,
+            event: {
+              type: "event",
+              name: "Transfer",
+              inputs: [
+                { indexed: true, name: "from", type: "address" },
+                { indexed: true, name: "to", type: "address" },
+                { indexed: false, name: "value", type: "uint256" },
+              ],
+            },
+            fromBlock,
+            toBlock: latestBlock,
+          }),
+          publicClient.getLogs({
+            address: contracts.w3f,
+            event: {
+              type: "event",
+              name: "W3FMinted",
+              inputs: [
+                { indexed: false, name: "to", type: "address" },
+                { indexed: false, name: "amount", type: "uint256" },
+              ],
+            },
+            fromBlock,
+            toBlock: latestBlock,
+          }),
+        ]);
 
-      const transactions: W3FTransaction[] = transferLogs
-        .sort((a, b) => Number(b.blockNumber) - Number(a.blockNumber))
-        .slice(0, 10)
-        .map((log) => {
+        return { transferLogs, mintedLogs };
+      };
+
+      let transferLogs: any[] = [];
+      let mintedLogs: any[] = [];
+
+      for (const lookback of lookbacks) {
+        const fromBlock =
+          latestBlock > lookback ? latestBlock - lookback : BigInt(0);
+        const result = await fetchLogsInRange(fromBlock);
+        transferLogs = result.transferLogs;
+        mintedLogs = result.mintedLogs;
+        if (transferLogs.length > 0 || mintedLogs.length > 0) {
+          break;
+        }
+      }
+
+      if (transferLogs.length === 0 && mintedLogs.length === 0) {
+        const result = await fetchLogsInRange(BigInt(0));
+        transferLogs = result.transferLogs;
+        mintedLogs = result.mintedLogs;
+      }
+
+      const mintedTransactions = await Promise.all(
+        mintedLogs.map(async (log) => {
+          const args = log.args as any;
+          let from = zeroAddress;
+
+          if (log.transactionHash) {
+            try {
+              const tx = await publicClient.getTransaction({
+                hash: log.transactionHash,
+              });
+              from = tx.from || zeroAddress;
+            } catch (error) {
+              console.error("Error fetching mint transaction:", error);
+            }
+          }
+
+          return {
+            hash: log.transactionHash || "",
+            from,
+            to: args.to,
+            amount: args.amount.toString(),
+            type: "MINT" as const,
+            blockNumber: log.blockNumber?.toString() || "0",
+            logIndex: Number(log.logIndex ?? 0),
+          };
+        })
+      );
+
+      const combined = [
+        ...transferLogs.map((log) => {
           const args = log.args as any;
           const from = args.from;
           const to = args.to;
@@ -79,9 +146,9 @@ const useW3F = () => {
 
           let type: W3FTransaction["type"] = "TRANSFER";
 
-          if (from === "0x0000000000000000000000000000000000000000") {
+          if (from === zeroAddress) {
             type = "MINT";
-          } else if (to === "0x0000000000000000000000000000000000000000") {
+          } else if (to === zeroAddress) {
             type = "BURN";
           }
 
@@ -92,8 +159,20 @@ const useW3F = () => {
             amount,
             type,
             blockNumber: log.blockNumber?.toString() || "0",
+            logIndex: Number(log.logIndex ?? 0),
           };
-        });
+        }),
+        ...mintedTransactions,
+      ];
+
+      const transactions: W3FTransaction[] = combined
+        .sort((a, b) => {
+          const blockDelta = Number(b.blockNumber) - Number(a.blockNumber);
+          if (blockDelta !== 0) return blockDelta;
+          return b.logIndex - a.logIndex;
+        })
+        .slice(0, 7)
+        .map(({ logIndex, ...tx }) => tx);
 
       return transactions;
     } catch (error) {
