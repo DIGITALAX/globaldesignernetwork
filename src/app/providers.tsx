@@ -5,6 +5,12 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { chains } from "@lens-chain/sdk/viem";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  coinbaseWallet,
+  injected,
+  safe,
+  walletConnect,
+} from "@wagmi/connectors";
+import {
   ErrorData,
   SuccessData,
 } from "./components/Modals/types/modals.types";
@@ -47,8 +53,37 @@ export const config = createConfig(
       .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
     appUrl: "https://globaldesignernetwork.com",
     appIcon: "https://globaldesignernetwork.com/favicon.ico",
+    appDescription: "Indie Web3 Fashion Fleet. Intensely DIY. Radical CC0.",
     chains: [chains.mainnet],
-    connectors: [],
+    enableFamily: false,
+    coinbaseWalletPreference: { telemetry: false },
+    connectors: [
+      ...(typeof window !== "undefined" && window.parent !== window
+        ? [
+            safe({
+              allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
+            }),
+          ]
+        : []),
+      injected({ target: "metaMask" }),
+      coinbaseWallet({
+        appName: "Global Designer Network",
+        appLogoUrl: "https://globaldesignernetwork.com/favicon.ico",
+        overrideIsMetaMask: false,
+        preference: { telemetry: false },
+      }),
+      walletConnect({
+        showQrModal: false,
+        projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
+        metadata: {
+          name: "Global Designer Network",
+          description: "Indie Web3 Fashion Fleet. Intensely DIY. Radical CC0.",
+          url: "https://globaldesignernetwork.com",
+          icons: ["https://globaldesignernetwork.com/favicon.ico"],
+        },
+        telemetryEnabled: false,
+      }),
+    ],
     transports: {
       [currentNetwork.chainId]: http(),
     },
