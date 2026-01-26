@@ -5,7 +5,6 @@ import { ConnectKitProvider, getDefaultConfig } from "connectkit";
 import { chains } from "@lens-chain/sdk/viem";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  coinbaseWallet,
   injected,
   safe,
   walletConnect,
@@ -56,7 +55,6 @@ export const config = createConfig(
     appDescription: "Indie Web3 Fashion Fleet. Intensely DIY. Radical CC0.",
     chains: [chains.mainnet],
     enableFamily: false,
-    coinbaseWalletPreference: { telemetry: false },
     connectors: [
       ...(typeof window !== "undefined" && window.parent !== window
         ? [
@@ -66,12 +64,6 @@ export const config = createConfig(
           ]
         : []),
       injected({ target: "metaMask" }),
-      coinbaseWallet({
-        appName: "Global Designer Network",
-        appLogoUrl: "https://globaldesignernetwork.com/favicon.ico",
-        overrideIsMetaMask: false,
-        preference: { telemetry: false },
-      }),
       walletConnect({
         showQrModal: false,
         projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string,
