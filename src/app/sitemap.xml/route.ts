@@ -97,12 +97,12 @@ const allVideos = [
 ];
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://globaldesignernetwork.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
 
   const designers = await getAllDesigners();
   const collections = await getAllCollections();
 
-  const staticPages = ["", "market", "indie-designers", "account"];
+  const staticPages = ["", "market", "indie-designers"];
 
   let staticPagesXml = "";
   staticPages.forEach((page) => {

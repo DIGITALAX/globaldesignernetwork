@@ -3,9 +3,12 @@ import "./globals.css";
 import Providers from "./providers";
 import Footer from "./components/Common/modules/Footer";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
+
 export const metadata: Metadata = {
   title: "Global Designer Network",
   description: "Indie Web3 Fashion Fleet. Intensely DIY. Radical CC0. In collaboration with DIGITALAX.",
+  metadataBase: new URL(baseUrl),
   robots: {
     googleBot: {
       index: true,
@@ -43,10 +46,10 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Global Designer Network",
-              url: "https://globaldesignernetwork.com/",
+              url: `${baseUrl}/`,
               logo: {
                 "@type": "ImageObject",
-                url: "https://globaldesignernetwork.com/images/globaldesignernetwork.png",
+                url: `${baseUrl}/images/globaldesignernetwork.png`,
                 width: 1200,
                 height: 630,
                 caption: "Global Designer Network Logo - Web3 Fashion",
@@ -104,30 +107,30 @@ export default function RootLayout({
                 "@type": "VideoObject",
                 name: "Global Designer Network Introduction - Web3 Fashion",
                 description: "Indie Web3 Fashion Fleet. Intensely DIY. Radical CC0.",
-                thumbnailUrl: "https://globaldesignernetwork.com/images/globaldesignernetwork.png",
+                thumbnailUrl: `${baseUrl}/images/globaldesignernetwork.png`,
                 uploadDate: "2024-01-01T00:00:00Z",
-                contentUrl: "https://globaldesignernetwork.com/videos/globaldesignernetwork.mp4",
-                embedUrl: "https://globaldesignernetwork.com/videos/globaldesignernetwork.mp4",
+                contentUrl: `${baseUrl}/videos/globaldesignernetwork.mp4`,
+                embedUrl: `${baseUrl}/videos/globaldesignernetwork.mp4`,
               },
               {
                 "@context": "https://schema.org",
                 "@type": "VideoObject",
                 name: "Web3 Fashion Runway Collection One - DIGITALAX",
                 description: "Web3 Fashion Show - On The Runway",
-                thumbnailUrl: "https://globaldesignernetwork.com/images/runway1.png",
+                thumbnailUrl: `${baseUrl}/images/runway1.png`,
                 uploadDate: "2024-01-01T00:00:00Z",
-                contentUrl: "https://globaldesignernetwork.com/videos/runway1.mp4",
-                embedUrl: "https://globaldesignernetwork.com/videos/runway1.mp4",
+                contentUrl: `${baseUrl}/videos/runway1.mp4`,
+                embedUrl: `${baseUrl}/videos/runway1.mp4`,
               },
               {
                 "@context": "https://schema.org",
                 "@type": "VideoObject",
                 name: "For Indie Designers - Web3 Fashion Guide",
                 description: "Tune in to this agent's thread: what's fashion about web3?",
-                thumbnailUrl: "https://globaldesignernetwork.com/images/indie.png",
+                thumbnailUrl: `${baseUrl}/images/indie.png`,
                 uploadDate: "2024-01-01T00:00:00Z",
-                contentUrl: "https://globaldesignernetwork.com/videos/indie.mp4",
-                embedUrl: "https://globaldesignernetwork.com/videos/indie.mp4",
+                contentUrl: `${baseUrl}/videos/indie.mp4`,
+                embedUrl: `${baseUrl}/videos/indie.mp4`,
               },
             ]),
           }}

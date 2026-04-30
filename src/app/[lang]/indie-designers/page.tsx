@@ -9,7 +9,7 @@ export async function generateMetadata({
   params: tParams;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const baseUrl = "https://globaldesignernetwork.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
 
   const titles: Record<string, string> = {
     en: "Indie Designers - Web3 Fashion Fleet | Global Designer Network",

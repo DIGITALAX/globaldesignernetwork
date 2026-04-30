@@ -8,7 +8,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ collectionContract: string; collectionId: string }>;
 }): Promise<Metadata> {
-  const baseUrl = "https://globaldesignernetwork.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
   const { collectionContract, collectionId } = await params;
   return {
     alternates: {

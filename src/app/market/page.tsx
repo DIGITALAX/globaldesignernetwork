@@ -4,7 +4,7 @@ import MarketEntry from "../components/Market/modules/MarketEntry";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = "https://globaldesignernetwork.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
   return {
     alternates: {
       canonical: `${baseUrl}/market/`,
