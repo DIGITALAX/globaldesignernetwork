@@ -28,7 +28,7 @@ export async function generateMetadata({
     "Web3 Fashion Collection. Indie DIY. Radical CC0. Minted on ETH + ZK aligned chains.";
 
   const mediaUrl = collectionData.metadata?.media
-    ? `https://thedial.infura-ipfs.io/ipfs/${collectionData.metadata.media}`
+    ? `https://cdn.digitalax.xyz/ipfs/${collectionData.metadata.media}`
     : null;
 
   return {
