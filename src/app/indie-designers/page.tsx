@@ -4,7 +4,7 @@ import IndieDesignersEntry from "../components/IndieDesigners/modules/IndieDesig
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://globaldesignernetwork.com";
   return {
     alternates: {
       canonical: `${baseUrl}/indie-designers/`,

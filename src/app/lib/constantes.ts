@@ -6,9 +6,23 @@ import {
 import { CoreContractAddresses } from "../components/Market/types/market.types";
 
 export const LOCALES: string[] = ["en", "es", "pt"];
+
+export const CONTRACTS_PAUSED: boolean = true;
+export const CONTRACTS_PAUSED_EVENT: string = "gdn-contracts-paused";
+export const NOTICE_STORAGE_KEY: string = "gdn-contract-notice-seen";
+export const NOTICE_URL: string = "https://restore.digitalax.xyz";
+export const NOTICE_URL_LABEL: string = "restore.digitalax.xyz";
 export const INFURA_GATEWAY: string = "https://cdn.digitalax.xyz";
 export const INFURA_GATEWAY_INTERNAL: string =
   "https://cdn.digitalax.xyz/ipfs/";
+
+export const SITE_URL: string = "https://globaldesignernetwork.com";
+export const RATE_LIMIT_WINDOW_MS: number = 60000;
+export const RATE_LIMIT_IPFS: number = 30;
+export const RATE_LIMIT_GRAPHQL: number = 1200;
+export const MAX_UPLOAD_BYTES: number = 100 * 1024 * 1024;
+export const MAX_GRAPH_QUERY_LENGTH: number = 10000;
+export const MONA_DECIMALS: number = 18;
 
 export const NETWORKS = {
   LENS_TESTNET: {

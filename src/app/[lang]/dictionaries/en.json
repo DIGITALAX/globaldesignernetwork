@@ -55,6 +55,7 @@
   "success": "SUCCESS",
   "error": "ERROR",
   "close": "CLOSE",
+  "contractNotice": "The Global Designer Network contracts are being rebuilt. Until the new ones are live, on-chain actions here are switched off. For more details go to",
   "cart": "CART",
   "emptyCart": "Empty Cart",
   "remove": "Remove",

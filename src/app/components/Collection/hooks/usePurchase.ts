@@ -6,15 +6,18 @@ import {
   getCurrentNetwork,
 } from "@/app/lib/constantes";
 import { useContext, useEffect, useState } from "react";
-import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
+import { erc20Abi } from "viem";
+import { chains } from "@lens-chain/sdk/viem";
 import { Collection } from "../../Designer/types./designer.types";
 import { CartItem, ModalContext } from "@/app/providers";
+import useLensWrite from "../../Common/hooks/useLensWrite";
 
 const usePurchase = (dict: any, collection?: Collection | undefined) => {
   const { address } = useAccount();
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: chains.mainnet.id });
   const context = useContext(ModalContext);
-  const { data: walletClient } = useWalletClient();
+  const { writeLens } = useLensWrite();
   const [purchaseLoading, setPurchaseLoading] = useState<boolean>(false);
   const [approveLoading, setApproveLoading] = useState<boolean>(false);
   const [batchLoading, setBatchLoading] = useState<boolean>(false);
@@ -23,22 +26,44 @@ const usePurchase = (dict: any, collection?: Collection | undefined) => {
   const network = getCurrentNetwork();
   const contracts = getCoreContractAddresses(network.chainId);
 
+  const toUnits = (amount: number): bigint => {
+    if (!Number.isSafeInteger(amount) || amount <= 0) {
+      throw new Error("Invalid amount");
+    }
+    return BigInt(amount);
+  };
+
+  const toWei = (price: string | undefined): bigint => {
+    if (!price || !/^\d+$/.test(String(price))) {
+      throw new Error("Invalid price");
+    }
+    return BigInt(price);
+  };
+
+  const requiredFor = (): bigint | undefined => {
+    try {
+      return toWei(collection?.price) * toUnits(purchaseAmount);
+    } catch (err: any) {
+      return undefined;
+    }
+  };
+
+  const readAllowance = async (): Promise<bigint> => {
+    if (!address || !publicClient) return BigInt(0);
+    return await publicClient.readContract({
+      address: contracts.mona,
+      abi: erc20Abi,
+      functionName: "allowance",
+      args: [address, contracts.market],
+    });
+  };
+
   const checkBalance = async (requiredAmount: bigint): Promise<boolean> => {
     if (!address || !publicClient) return false;
     try {
       const balance = await publicClient.readContract({
         address: contracts.mona,
-        abi: [
-          {
-            type: "function",
-            name: "balanceOf",
-            inputs: [
-              { name: "account", type: "address", internalType: "address" },
-            ],
-            outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-            stateMutability: "view",
-          },
-        ],
+        abi: erc20Abi,
         functionName: "balanceOf",
         args: [address],
       });
@@ -55,7 +80,7 @@ const usePurchase = (dict: any, collection?: Collection | undefined) => {
   };
 
   const handlePurchase = async () => {
-    if (!walletClient || !address || !publicClient || !collection) return;
+    if (!address || !publicClient || !collection) return;
     setPurchaseLoading(true);
     try {
       if (collection?.tokenIds?.length == Number(collection?.edition)) {
@@ -64,22 +89,28 @@ const usePurchase = (dict: any, collection?: Collection | undefined) => {
         return;
       }
 
-      const requiredAmount = parseFloat(collection.price) * purchaseAmount;
+      const requiredAmount = toWei(collection.price) * toUnits(purchaseAmount);
 
-      const hasBalance = await checkBalance(BigInt(requiredAmount));
+      const hasBalance = await checkBalance(requiredAmount);
       if (!hasBalance) {
         setPurchaseLoading(false);
         return;
       }
 
-      const hash = await walletClient.writeContract({
+      if ((await readAllowance()) < requiredAmount) {
+        setApproved(false);
+        setPurchaseLoading(false);
+        const didApprove = await handleApprove(requiredAmount);
+        if (!didApprove) return;
+        setPurchaseLoading(true);
+      }
+
+      const hash = await writeLens({
         address: contracts.market,
         abi: ABIS.GDNMarket,
         functionName: "buy",
-        args: [BigInt(collection.collectionId), BigInt(purchaseAmount), ""],
-        account: address,
+        args: [BigInt(collection.collectionId), toUnits(purchaseAmount), ""],
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       setPurchaseAmount(1);
       await checkApproved();
       context?.showSuccess(dict?.purchaseSuccess, hash);
@@ -90,79 +121,60 @@ const usePurchase = (dict: any, collection?: Collection | undefined) => {
     setPurchaseLoading(false);
   };
 
-  const handleApprove = async (amount: bigint) => {
-    if (!walletClient || !address || !publicClient) return;
+  const handleApprove = async (amount: bigint): Promise<boolean> => {
+    if (!address || !publicClient || amount <= BigInt(0)) return false;
     setApproveLoading(true);
+    let success = false;
     try {
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.mona,
-        abi: [
-          {
-            type: "function",
-            name: "approve",
-            inputs: [
-              { name: "spender", type: "address", internalType: "address" },
-              { name: "value", type: "uint256", internalType: "uint256" },
-            ],
-            outputs: [{ name: "", type: "bool", internalType: "bool" }],
-            stateMutability: "nonpayable",
-          },
-        ],
+        abi: erc20Abi,
         functionName: "approve",
         args: [contracts.market, amount],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
+      success = (await readAllowance()) >= amount;
+      if (!success) {
+        throw new Error("Allowance was not set");
+      }
       setApproved(true);
       context?.showSuccess(dict?.approveSuccess, hash);
     } catch (err: any) {
-      setApproveLoading(false);
+      success = false;
       console.error(err.message);
       context?.showError(dict?.approveError);
     }
     setApproveLoading(false);
+    return success;
   };
 
   const checkApproved = async () => {
     if (!address || !publicClient || !collection) return;
     try {
-      const data = await publicClient?.readContract({
-        address: contracts.mona,
-        abi: [
-          {
-            type: "function",
-            name: "allowance",
-            inputs: [
-              { name: "owner", type: "address", internalType: "address" },
-              { name: "spender", type: "address", internalType: "address" },
-            ],
-            outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-            stateMutability: "view",
-          },
-        ],
-        functionName: "allowance",
-        args: [address, contracts.market],
-        account: address,
-      });
-      if (Number(data) >= Number(collection.price) * purchaseAmount) {
-        setApproved(true);
-      } else {
+      const required = requiredFor();
+      if (required === undefined) {
         setApproved(false);
+        return;
       }
+      const data = await readAllowance();
+      setApproved(data >= required);
     } catch (err: any) {
       console.error(err.message);
     }
   };
 
   useEffect(() => {
-    if (!approved && address && publicClient && collection) {
+    if (address && publicClient && collection) {
       checkApproved();
     }
   }, [address, publicClient, collection, purchaseAmount]);
 
   const handleApproveFlow = async () => {
-    const totalAmount = parseFloat(collection?.price || "0") * purchaseAmount;
-    await handleApprove(BigInt(totalAmount));
+    const totalAmount = requiredFor();
+    if (totalAmount === undefined) {
+      context?.showError(dict?.approveError);
+      return;
+    }
+    await handleApprove(totalAmount);
   };
 
   const handlePurchaseFlow = async () => {
@@ -174,37 +186,41 @@ const usePurchase = (dict: any, collection?: Collection | undefined) => {
   };
 
   const handleBuyBatch = async (cartItems: CartItem[]) => {
-    if (!walletClient || !address || !publicClient || cartItems.length === 0)
-      return;
+    if (!address || !publicClient || cartItems.length === 0) return;
     setBatchLoading(true);
     try {
       const collectionIds = cartItems.map((item) =>
-        Number(item.collection.collectionId)
+        BigInt(item.collection.collectionId)
       );
-      const amounts = cartItems.map((item) => item.amount);
+      const amounts = cartItems.map((item) => toUnits(item.amount));
       const fulfillments = Array.from({ length: amounts.length }, () => "");
 
       const totalAmount = cartItems.reduce(
-        (sum, item) => sum + parseFloat(item.collection.price) * item.amount,
-        0
+        (sum, item) =>
+          sum + toWei(item.collection.price) * toUnits(item.amount),
+        BigInt(0)
       );
 
-      const hasBalance = await checkBalance(BigInt(totalAmount));
+      const hasBalance = await checkBalance(totalAmount);
       if (!hasBalance) {
         setBatchLoading(false);
         return;
       }
 
-      await handleApprove(BigInt(totalAmount));
+      if ((await readAllowance()) < totalAmount) {
+        const didApprove = await handleApprove(totalAmount);
+        if (!didApprove) {
+          setBatchLoading(false);
+          return;
+        }
+      }
 
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.market,
         abi: ABIS.GDNMarket,
         functionName: "buyBatch",
         args: [collectionIds, amounts, fulfillments],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.batchPurchaseSuccess, hash);
     } catch (err: any) {
       console.error(err.message);

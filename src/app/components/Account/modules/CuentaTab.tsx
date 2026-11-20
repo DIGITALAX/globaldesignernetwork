@@ -5,6 +5,7 @@ import useAccount from "../hooks/useAccount";
 import Image from "next/image";
 import { INFURA_GATEWAY } from "@/app/lib/constantes";
 import { CuentaTabProps } from "../types/account.types";
+import safeExternalUrl from "@/app/lib/helpers/safeExternalUrl";
 
 const CuentaTab: FunctionComponent<CuentaTabProps> = ({
   dict,
@@ -151,9 +152,9 @@ const CuentaTab: FunctionComponent<CuentaTabProps> = ({
                   {dict?.website}
                 </label>
                 <div className="p-3 bg-gray-100">
-                  {designer?.metadata?.link ? (
+                  {safeExternalUrl(designer?.metadata?.link) ? (
                     <a
-                      href={designer?.metadata?.link}
+                      href={safeExternalUrl(designer?.metadata?.link)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"

@@ -3,16 +3,19 @@ import {
   getCurrentNetwork,
 } from "@/app/lib/constantes";
 import { useContext, useState } from "react";
-import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 import { Collection, Designer } from "../../Designer/types./designer.types";
 import { ABIS } from "@/abis";
 import { ModalContext } from "@/app/providers";
+import useLensWrite from "../../Common/hooks/useLensWrite";
+import precioAWei from "@/app/lib/helpers/precioAWei";
+import blockIfPaused from "@/app/lib/helpers/contractsPaused";
 
 const useCreate = (designer: Designer | undefined, dict: any) => {
   const { address } = useAccount();
   const publicClient = usePublicClient();
   const context = useContext(ModalContext);
-  const { data: walletClient } = useWalletClient();
+  const { writeLens } = useLensWrite();
   const network = getCurrentNetwork();
   const contracts = getCoreContractAddresses(network.chainId);
   const [createDropLoading, setCreateDropLoading] = useState<boolean>(false);
@@ -56,7 +59,6 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
   const handleCreateDrop = async () => {
     if (
-      !walletClient ||
       !address ||
       !designer ||
       !publicClient ||
@@ -69,6 +71,7 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
     setCreateDropLoading(true);
     try {
+      blockIfPaused();
       const formData = new FormData();
       formData.append("file", drop.image as File);
 
@@ -95,7 +98,7 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
       let promisedCollections: {
         edition: number;
-        price: number;
+        price: bigint;
         uri: string;
       }[] = [];
 
@@ -141,21 +144,19 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
               return {
                 edition: col.amount,
-                price: col.price * 10 ** 18,
+                price: precioAWei(col.price),
                 uri: "ipfs://" + result.hash,
               };
             })
         );
       }
 
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "createDrop",
         args: ["ipfs://" + result.hash, promisedCollections],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.createDropSuccess, hash);
       setDrop(undefined);
       setCollections([]);
@@ -168,7 +169,6 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
   const handleAddCollection = async (dropId: number) => {
     if (
-      !walletClient ||
       !address ||
       !designer ||
       !publicClient ||
@@ -181,6 +181,8 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
     setAddCollectionLoading(true);
     try {
+      blockIfPaused();
+      const price = precioAWei(collection.price);
       const formData = new FormData();
       formData.append("file", collection.metadata.media as File);
 
@@ -209,7 +211,7 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
       const result = await response.json();
 
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "addCollection",
@@ -217,13 +219,11 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
           dropId,
           {
             edition: collection.amount,
-            price: collection.price * 10 ** 18,
+            price,
             uri: "ipfs://" + result.hash,
           },
         ],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.addCollectionSuccess, hash);
       setCollection(undefined)
     } catch (err: any) {
@@ -235,7 +235,6 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
 
   const handleDeleteCollection = async (collection: Collection) => {
     if (
-      !walletClient ||
       !address ||
       !designer ||
       !publicClient ||
@@ -246,14 +245,12 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
     const collectionId = Number(collection.collectionId);
     setDeleteCollectionLoading(collectionId);
     try {
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "deleteCollection",
         args: [collectionId],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.deleteCollectionSuccess, hash);
     } catch (err: any) {
       console.error(err.message);
@@ -263,17 +260,15 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
   };
 
   const handleDeleteDrop = async (dropId: number) => {
-    if (!walletClient || !address || !designer || !publicClient) return;
+    if (!address || !designer || !publicClient) return;
     setDeleteDropLoading(dropId);
     try {
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "deleteDrop",
         args: [dropId],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.deleteDropSuccess, hash);
     } catch (err: any) {
       console.error(err.message);
@@ -286,17 +281,15 @@ const useCreate = (designer: Designer | undefined, dict: any) => {
     collectionId: number,
     newDropId: number
   ) => {
-    if (!walletClient || !address || !designer || !publicClient) return;
+    if (!address || !designer || !publicClient) return;
     setReassignLoading(true);
     try {
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "reassignCollection",
         args: [collectionId, newDropId],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.reassignCollectionSuccess, hash);
     } catch (err: any) {
       console.error(err.message);

@@ -3,7 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 import Footer from "./components/Common/modules/Footer";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://globaldesignernetwork.com";
 
 export const metadata: Metadata = {
   title: "Global Designer Network",

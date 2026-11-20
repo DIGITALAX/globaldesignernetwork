@@ -107,6 +107,13 @@ export type ColorPickerProps = {
 };
 
 
+export interface LensWriteParams {
+  address: `0x${string}`;
+  abi: readonly unknown[];
+  functionName: string;
+  args: readonly unknown[];
+}
+
 export interface W3FStats {
   totalSupply: string;
 }

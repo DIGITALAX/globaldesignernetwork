@@ -10,13 +10,16 @@ export const ensureMetadata = async (item: any) => {
 
 export const fetchMetadataFromIPFS = async (uri: string): Promise<any> => {
   try {
-    let metadataUrl = uri;
-
-    if (uri?.startsWith("ipfs://")) {
-      metadataUrl = `${INFURA_GATEWAY}/ipfs/${uri.split("ipfs://")[1]}`;
-    } else if (!uri?.startsWith("http://") && !uri?.startsWith("https://")) {
+    if (typeof uri !== "string" || !uri.startsWith("ipfs://")) {
       return null;
     }
+
+    const cid = uri.slice("ipfs://".length);
+    if (!/^[A-Za-z0-9]+(\/[A-Za-z0-9._-]+)*$/.test(cid)) {
+      return null;
+    }
+
+    const metadataUrl = `${INFURA_GATEWAY}/ipfs/${cid}`;
 
     const response = await fetch(metadataUrl);
     if (!response.ok) {

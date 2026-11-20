@@ -1,9 +1,7 @@
 import { useContext, useState } from "react";
-import {
-  usePublicClient,
-  useWalletClient,
-  useAccount as useAccountWagmi,
-} from "wagmi";
+import { usePublicClient, useAccount as useAccountWagmi } from "wagmi";
+import { isAddress } from "viem";
+import useLensWrite from "../../Common/hooks/useLensWrite";
 import { Designer } from "../../Designer/types./designer.types";
 import {
   getCoreContractAddresses,
@@ -12,6 +10,7 @@ import {
 import { ABIS } from "@/abis";
 import { DesignerData } from "../types/account.types";
 import { ModalContext } from "@/app/providers";
+import blockIfPaused from "@/app/lib/helpers/contractsPaused";
 
 const useAccount = (
   designer: Designer | undefined,
@@ -21,7 +20,7 @@ const useAccount = (
   const { address } = useAccountWagmi();
   const publicClient = usePublicClient();
   const context = useContext(ModalContext);
-  const { data: walletClient } = useWalletClient();
+  const { writeLens } = useLensWrite();
   const [registerLoading, setRegisterLoading] = useState<boolean>(false);
   const [updateLoading, setUpdateLoading] = useState<boolean>(false);
   const [transferLoading, setTransferLoading] = useState<boolean>(false);
@@ -41,7 +40,6 @@ const useAccount = (
   const handleRegister = async () => {
     if (
       !address ||
-      !walletClient ||
       !publicClient ||
       designer ||
       !verified ||
@@ -54,6 +52,7 @@ const useAccount = (
       return;
     setRegisterLoading(true);
     try {
+      blockIfPaused();
       let image = designerData?.image;
       if (typeof designerData?.image !== "string") {
         const formData = new FormData();
@@ -98,14 +97,12 @@ const useAccount = (
 
       const result = await response.json();
 
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "registerDesigner",
         args: ["ipfs://" + result.hash],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.registerSuccess, hash);
     } catch (err: any) {
       console.error(err.message);
@@ -117,7 +114,6 @@ const useAccount = (
   const handleUpdate = async () => {
     if (
       !address ||
-      !walletClient ||
       !publicClient ||
       !designer ||
       !verified ||
@@ -130,6 +126,7 @@ const useAccount = (
       return;
     setUpdateLoading(true);
     try {
+      blockIfPaused();
       let image = designerData?.image;
       if (typeof designerData?.image !== "string") {
         const formData = new FormData();
@@ -174,14 +171,12 @@ const useAccount = (
 
       const result = await response.json();
 
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "updateDesigner",
         args: ["ipfs://" + result.hash],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.updateSuccess, hash);
     } catch (err: any) {
       console.error(err.message);
@@ -193,24 +188,22 @@ const useAccount = (
   const transferWallet = async () => {
     if (
       !address ||
-      !walletClient ||
       !publicClient ||
       !designer ||
       !verified ||
-      !designerData?.transferWallet
+      !designerData?.transferWallet ||
+      !isAddress(String(designerData?.transferWallet).trim())
     )
       return;
 
     setTransferLoading(true);
     try {
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "transferDesigner",
-        args: [designerData?.transferWallet],
-        account: address,
+        args: [String(designerData?.transferWallet).trim()],
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.transferWallet, hash);
     } catch (err: any) {
       console.error(err.message);
@@ -222,7 +215,6 @@ const useAccount = (
   const handleDelete = async () => {
     if (
       !address ||
-      !walletClient ||
       !publicClient ||
       !designer ||
       !verified ||
@@ -231,14 +223,12 @@ const useAccount = (
       return;
     setDeleteLoading(true);
     try {
-      const hash = await walletClient.writeContract({
+      const hash = await writeLens({
         address: contracts.designers,
         abi: ABIS.GDNDesigners,
         functionName: "deleteDesigner",
         args: [],
-        account: address,
       });
-      await publicClient.waitForTransactionReceipt({ hash });
       context?.showSuccess(dict?.deleteSuccess, hash);
     } catch (err: any) {
       console.error(err.message);

@@ -103,12 +103,6 @@ const useW3F = () => {
         }
       }
 
-      if (transferLogs.length === 0 && mintedLogs.length === 0) {
-        const result = await fetchLogsInRange(BigInt(0));
-        transferLogs = result.transferLogs;
-        mintedLogs = result.mintedLogs;
-      }
-
       const mintedTransactions = await Promise.all(
         mintedLogs.map(async (log) => {
           const args = log.args as any;

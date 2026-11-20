@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ApolloClient, InMemoryCache, HttpLink, gql } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import guardRequest from "@/app/lib/helpers/guardRequest";
+import validateGraphQuery from "@/app/lib/helpers/validateGraphQuery";
+import { RATE_LIMIT_GRAPHQL } from "@/app/lib/constantes";
 
 const serverPrintClient = new ApolloClient({
   link: new HttpLink({
@@ -10,6 +13,9 @@ const serverPrintClient = new ApolloClient({
 
 export async function POST(request: NextRequest) {
   try {
+    const blocked = guardRequest(request, "graphql-print", RATE_LIMIT_GRAPHQL);
+    if (blocked) return blocked;
+
     const { query, variables } = await request.json();
 
     if (!query) {
@@ -19,8 +25,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const { error, document } = validateGraphQuery(query);
+    if (error || !document) {
+      return NextResponse.json(
+        { error: error || "Query is not valid" },
+        { status: 400 }
+      );
+    }
+
     const result = await serverPrintClient.query({
-      query: gql(query),
+      query: document,
       variables: variables || {},
       fetchPolicy: "no-cache",
       errorPolicy: "all",
@@ -28,8 +42,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error: any) {
+    console.error(error?.message);
     return NextResponse.json(
-      { error: error?.message || "GraphQL query failed" },
+      { error: "GraphQL query failed" },
       { status: 500 }
     );
   }

@@ -55,6 +55,7 @@
   "success": "ÉXITO",
   "error": "ERROR",
   "close": "CERRAR",
+  "contractNotice": "Los contratos de Global Designer Network se están reconstruyendo. Hasta que los nuevos estén activos, las acciones on-chain están desactivadas aquí. Para más detalles visita",
   "cart": "CARRITO",
   "emptyCart": "Carrito vacío",
   "remove": "Eliminar",

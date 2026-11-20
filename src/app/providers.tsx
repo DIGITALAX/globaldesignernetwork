@@ -8,7 +8,7 @@ import {
   injected,
   safe,
   walletConnect,
-} from "@wagmi/connectors";
+} from "wagmi/connectors";
 import {
   ErrorData,
   SuccessData,
@@ -17,6 +17,7 @@ import {
   Collection,
 } from "./components/Designer/types./designer.types";
 import { getCurrentNetwork } from "./lib/constantes";
+import useNotice from "./components/Modals/hooks/useNotice";
 
 const queryClient = new QueryClient();
 const currentNetwork = getCurrentNetwork();
@@ -34,6 +35,8 @@ export const ModalContext = createContext<
       hideError: () => void;
       successData: SuccessData | null;
       errorData: ErrorData | null;
+      noticeOpen: boolean;
+      hideNotice: () => void;
       cartItems: CartItem[];
       addToCart: (collection: Collection, amount: number) => void;
       removeFromCart: (collectionId: string) => void;
@@ -54,7 +57,6 @@ export const config = createConfig(
     appIcon: "https://globaldesignernetwork.com/favicon.ico",
     appDescription: "Indie Web3 Fashion Fleet. Intensely DIY. Radical CC0.",
     chains: [chains.mainnet],
-    enableFamily: false,
     connectors: [
       ...(typeof window !== "undefined" && window.parent !== window
         ? [
@@ -93,7 +95,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     setSuccessData({ message, txHash });
   };
 
+  const { noticeOpen, hideNotice, wasJustBlocked } = useNotice();
+
   const showError = (message: string) => {
+    if (wasJustBlocked(message)) return;
     setErrorData({ message });
   };
 
@@ -161,6 +166,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               hideError,
               successData,
               errorData,
+              noticeOpen,
+              hideNotice,
               cartItems,
               addToCart,
               removeFromCart,

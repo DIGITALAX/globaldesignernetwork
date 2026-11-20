@@ -1,8 +1,9 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
+import { SITE_URL } from "../constantes";
 
 const getPrintUri = () => {
   if (typeof window === "undefined") {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || SITE_URL;
     return `${baseUrl}/api/graphql/print`;
   }
   return "/api/graphql/print";
@@ -19,7 +20,7 @@ export const graphClient = new ApolloClient({
 
 const getGDNUri = () => {
   if (typeof window === "undefined") {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || SITE_URL;
     return `${baseUrl}/api/graphql/gdn`;
   }
   return "/api/graphql/gdn";

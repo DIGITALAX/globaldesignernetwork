@@ -10,7 +10,7 @@ export async function generateMetadata({
   params: Promise<{ lang: string; collectionContract: string; collectionId: string }>;
 }): Promise<Metadata> {
   const { lang, collectionContract, collectionId } = await params;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://gms.globaldesignernetwork.com";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://globaldesignernetwork.com";
 
   const result = await getCollection(parseInt(collectionId), collectionContract);
   const collectionData = result?.data?.collections?.[0];
@@ -27,8 +27,11 @@ export async function generateMetadata({
     collectionData.metadata?.description ||
     "Web3 Fashion Collection. Indie DIY. Radical CC0. Minted on ETH + ZK aligned chains.";
 
-  const mediaUrl = collectionData.metadata?.media
-    ? `https://cdn.digitalax.xyz/ipfs/${collectionData.metadata.media}`
+  const mediaCid = String(collectionData.metadata?.media || "")
+    .replace(/^ipfs:\/\//, "")
+    .trim();
+  const mediaUrl = /^[A-Za-z0-9]+(\/[A-Za-z0-9._-]+)*$/.test(mediaCid)
+    ? `https://cdn.digitalax.xyz/ipfs/${mediaCid}`
     : null;
 
   return {
